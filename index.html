@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Калькулятор опасных зон</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --navy: #1A2B4A;
+  --orange: #FF6B35; 
+  --bg: #0a111c;
+  --card: #121e30;
+  --border: rgba(255,255,255,0.08);
+  --text: rgba(255,255,255,0.9);
+  --muted: rgba(255,255,255,0.4);
+  --green: #2ecc71;
+  --red: #e74c3c;
+  --yellow: #f1c40f;
+}
+
+body {
+  background: var(--bg);
+  font-family: 'Montserrat', sans-serif;
+  color: var(--text);
+  min-height: 100vh;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  align-self: flex-start;
+}
+
+.logo-icon {
+  width: 42px;
+  height: 42px;
+  background: var(--orange);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Bebas Neue', sans-serif;
+  color: white;
+  font-size: 18px;
+  letter-spacing: 1px;
+}
+
+.logo-text {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: 1px;
+  line-height: 1;
+}
+
+.logo-text span { color: var(--orange); }
+
+.logo-sub {
+  color: var(--muted);
+  font-size: 8px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+.main {
+  width: 100%;
+  max-width: 900px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+@media (min-width: 768px) {
+  .main {
+    display: grid;
+    grid-template-columns: 390px 1fr;
+    gap: 20px;
+  }
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 20px;
+}
+
+.card-title {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.type-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.type-btn {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 8px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.type-btn.active {
+  border-color: var(--orange);
+  background: rgba(255,107,53,0.15);
+}
+
+.type-btn .icon { font-size: 18px; margin-bottom: 4px; display: block; }
+.type-btn .label { font-size: 10px; font-weight: 700; color: var(--text); }
+
+.input-group { margin-bottom: 14px; }
+.input-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  display: flex;
+  justify-content: space-between;
+}
+.input-label span { color: var(--orange); font-size: 9px; text-transform: none; }
+
+.input-field {
+  width: 100%;
+  background: rgba(0,0,0,0.2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 14px;
+  color: white;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: 'Montserrat', sans-serif;
+  outline: none;
+}
+
+.input-field:focus { border-color: var(--orange); }
+
+.input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.hidden { display: none !important; }
+
+.calc-btn {
+  width: 100%;
+  background: var(--orange);
+  border: none;
+  border-radius: 10px;
+  padding: 15px;
+  color: white;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  cursor: pointer;
+  margin-top: 8px;
+  box-shadow: 0 4px 15px rgba(255,107,53,0.2);
+}
+
+.results-col { display: flex; flex-direction: column; gap: 14px; }
+
+/* Полностью переработанная визуализация без наложений */
+.zone-visual {
+  position: relative;
+  height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.zone-circle {
+  position: absolute;
+  border-radius: 50%;
+  border: 2px dashed;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Внешний круг: текст прижат к самому верху внутри круга */
+.zone-1 { 
+  border-color: rgba(231,76,60,0.4); 
+  background: rgba(231,76,60,0.02); 
+  justify-content: flex-start;
+  padding-top: 10px;
+}
+
+/* Внутренний круг: текст прижат к самому низу внутри круга */
+.zone-2 { 
+  border-color: rgba(241,196,15,0.4); 
+  background: rgba(241,196,15,0.03); 
+  justify-content: flex-end;
+  padding-bottom: 10px;
+}
+
+.zone-center {
+  width: 38px; height: 38px; background: var(--orange);
+  border-radius: 50%; z-index: 10;
+  box-shadow: 0 0 15px rgba(255,107,53,0.5);
+  display: flex; align-items: center; justify-content: center; font-size: 16px;
+  position: absolute; /* Центр жестко зафиксирован в геометрической точке 0,0 */
+}
+
+/* Чистые стили надписей, которые теперь находятся внутри потока флексбокса */
+.zone-label { 
+  font-size: 8px; 
+  font-weight: 700; 
+  letter-spacing: 1px; 
+  text-transform: uppercase; 
+  text-align: center;
+  width: 90%;
+  pointer-events: none;
+}
+.zone-label-1 { color: rgba(231,76,60,0.85); }
+.zone-label-2 { color: rgba(241,196,15,0.85); } 
+
+/* Результаты */
+.result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.result-card { border-radius: 12px; padding: 12px; text-align: center; border: 1px solid; }
+.result-card.danger { background: rgba(231,76,60,0.05); border-color: rgba(231,76,60,0.15); }
+.result-card.warning { background: rgba(241,196,15,0.05); border-color: rgba(241,196,15,0.15); }
+
+.result-card .zone-name { font-size: 8px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 4px; }
+.result-card.danger .zone-name { color: var(--red); }
+.result-card.warning .zone-name { color: var(--yellow); }
+
+.result-card .zone-value { font-family: 'Bebas Neue', sans-serif; font-size: 36px; line-height: 1; }
+.result-card.danger .zone-value { color: var(--red); }
+.result-card.warning .zone-value { color: var(--yellow); }
+
+.result-card .zone-unit { font-size: 9px; color: var(--muted); font-weight: 500; }
+
+.ntd-block {
+  background: rgba(255,107,53,0.04);
+  border: 1px solid rgba(255,107,53,0.15);
+  border-left: 4px solid var(--orange);
+  border-radius: 0 10px 10px 0;
+  padding: 14px;
+}
+.ntd-title { font-size: 9px; font-weight: 700; color: var(--orange); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+.ntd-text { font-size: 11px; color: rgba(255,255,255,0.75); line-height: 1.5; }
+.ntd-text strong { color: white; }
+
+.req-list { display: flex; flex-direction: column; gap: 8px; }
+.req-item { display: flex; align-items: flex-start; gap: 8px; font-size: 10px; color: rgba(255,255,255,0.7); line-height: 1.4; }
+.req-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--orange); margin-top: 5px; flex-shrink: 0; }
+.disclaimer { font-size: 8px; color: var(--muted); text-align: center; padding-top: 10px; border-top: 1px solid var(--border); margin-top: 4px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo-icon">ОТ</div>
+  <div>
+    <div class="logo-text">ОТ <span>Навигатор</span></div>
+    <div class="logo-sub">Калькулятор опасных зон</div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="card">
+    <div class="card-title">Параметры работы</div>
+
+    <div class="type-grid">
+      <div class="type-btn active" onclick="setWorkType('fire', this)">
+        <span class="icon">🔥</span>
+        <div class="label">Огневые работы</div>
+      </div>
+      <div class="type-btn" onclick="setWorkType('gas', this)">
+        <span class="icon">💨</span>
+        <div class="label">Газоопасные</div>
+      </div>
+    </div>
+
+    <div id="fields-container">
+      <div id="group-fire" class="work-fields">
+        <div class="input-group">
+          <div class="input-label">Место проведения огневых работ</div>
+          <select id="fire-place" class="input-field" onchange="calculate()">
+            <option value="line">Линейная часть (магистральные трубопроводы)</option>
+            <option value="station_open">Производственная площадка (открытая)</option>
+            <option value="station_room">Производственное помещение (цех)</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <div class="input-label">Высота точки сварки/резки (H)</div>
+          <select id="fire-height" class="input-field" onchange="calculate()">
+            <option value="0">На уровне земли (0 м)</option>
+            <option value="2">До 2 метров</option>
+            <option value="5">От 2 до 5 метров</option>
+            <option value="10">От 5 до 10 метров</option>
+            <option value="15">Свыше 10 метров</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="group-gas" class="work-fields hidden">
+        <div class="input-group">
+          <div class="input-label">Характер газоопасных работ</div>
+          <select id="gas-task" class="input-field" onchange="calculate()">
+            <option value="purge">Стравливание / продувка газа через свечи</option>
+            <option value="repair_open">Ремонт с разгерметизацией оборудования</option>
+            <option value="inspect_ozp">Работы без разгерметизации / в ОЗП (колодцы)</option>
+          </select>
+        </div>
+        
+        <div class="input-row">
+          <div class="input-group">
+            <div class="input-label">Диаметр трубы <span>DN</span></div>
+            <select id="gas-dn" class="input-field" onchange="calculate()">
+              <option value="50">DN 50 (57 мм)</option>
+              <option value="200">DN 200 (219 мм)</option>
+              <option value="500">DN 500 (530 мм)</option>
+              <option value="1000">DN 1000 (1020 мм)</option>
+              <option value="1400" selected>DN 1400 (1420 мм)</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <div class="input-label">Давление газа <span>МПа</span></div>
+            <input type="number" id="gas-pressure" class="input-field" value="5.5" step="0.1" min="0" max="12" oninput="calculate()">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button class="calc-btn" onclick="triggerAnimate()">⚡ Обновить расчет</button>
+  </div>
+
+  <div class="results-col">
+    <div class="card">
+      <div class="card-title">Схема контроля границ</div>
+      <div class="zone-visual">
+        <div id="c1" class="zone-circle zone-1" style="width: 200px; height: 200px;">
+          <div class="zone-label zone-label-1" id="lbl-z1">Опасная зона</div>
+        </div>
+        <div id="c2" class="zone-circle zone-2" style="width: 110px; height: 110px;">
+          <div class="zone-label zone-label-2" id="lbl-z2">Зона замера ГВС</div>
+        </div>
+        <div id="center-ico" class="zone-center">🔥</div>
+      </div>
+    </div>
+
+    <div class="result-grid">
+      <div class="result-card danger">
+        <div class="zone-name">🚫 Зона Оцепления</div>
+        <div id="res-d" class="zone-value">50</div>
+        <div class="zone-unit">метров</div>
+      </div>
+      <div class="result-card warning">
+        <div class="zone-name">🧪 Контроль ГВС</div>
+        <div id="res-w" class="zone-value">20</div>
+        <div class="zone-unit">метров</div>
+      </div>
+    </div>
+
+    <div class="ntd-block">
+      <div class="ntd-title">Нормативное основание</div>
+      <div id="ntd-text" class="ntd-text">Загрузка данных...</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Чек-лист перед допуском</div>
+      <div class="req-list">
+        <div class="req-item"><div class="req-dot"></div>Выставить посты оцепления на границе зоны безопасности.</div>
+        <div class="req-item"><div class="req-dot"></div>Провести анализ газовоздушной среды (допустимо строго 0% НКПР перед началом).</div>
+        <div class="req-item"><div class="req-dot"></div>Проверить регистрацию наряда-допуска в установленном порядке.</div>
+      </div>
+      <div class="disclaimer">⚠️ Данный расчет автоматизирован на основе внутренних регламентов предприятия.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+let currentType = 'fire';
+
+function setWorkType(type, element) {
+  currentType = type;
+  document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+  element.classList.add('active');
+  
+  document.querySelectorAll('.work-fields').forEach(f => f.classList.add('hidden'));
+  document.getElementById(`group-${type}`).classList.remove('hidden');
+  
+  const icons = { fire: '🔥', gas: '💨' };
+  document.getElementById('center-ico').textContent = icons[type];
+  
+  calculate();
+}
+
+function calculate() {
+  let zoneMax = 50; 
+  let zoneMin = 20;
+  let ntd = "";
+  let z1Name = "Опасная зона";
+  let z2Name = "Зона ГВС";
+
+  if (currentType === 'fire') {
+    const place = document.getElementById('fire-place').value;
+    const height = document.getElementById('fire-height').value;
+    
+    let sparkRadius = 5;
+    if (height === "2") sparkRadius = 8;
+    else if (height === "5") sparkRadius = 10;
+    else if (height === "10") sparkRadius = 12;
+    else if (height === "15") sparkRadius = 14;
+
+    z2Name = "Очистка от материалов";
+    zoneMin = sparkRadius;
+
+    if (place === 'line') {
+      zoneMax = 50;
+      z1Name = "Посты оцепления ЛЧ";
+      ntd = `При работах на линейной части магистральных трубопроводов посты оцепления выставляются на расстоянии <strong>50м</strong>. Очистка площадки от горючих материалов в зависимости от высоты: <strong>${sparkRadius}м</strong>.`;
+    } else if (place === 'station_open') {
+      zoneMax = 25;
+      z1Name = "Опасная зона площадки";
+      ntd = `На открытых производственных площадках опасная зона составляет не менее <strong>25м</strong>. Заранее очищаемый радиус разлета горячих искр — <strong>${sparkRadius}м</strong>.`;
+    } else {
+      zoneMax = 15;
+      z1Name = "Зона контроля цеха";
+      ntd = `Внутри замкнутых производственных помещений зона контроля составляет <strong>15м</strong>. Очистка или экранирование горючих конструкций обязательны в радиусе <strong>${sparkRadius}м</strong>.`;
+    }
+  } 
+  else if (currentType === 'gas') {
+    const task = document.getElementById('gas-task').value;
+    const dn = parseInt(document.getElementById('gas-dn').value);
+    const p = parseFloat(document.getElementById('gas-pressure').value) || 0;
+
+    z1Name = "Зона оцепления";
+    z2Name = "Анализ воздуха";
+
+    if (task === 'purge') {
+      if (dn >= 1000 && p > 5.4) {
+        zoneMax = 300; 
+      } else if (dn >= 500 || p > 2.0) {
+        zoneMax = 200;
+      } else {
+        zoneMax = 150;
+      }
+      zoneMin = Math.round(zoneMax * 0.25);
+      ntd = `При интенсивном стравливании или продувке газа через свечи на трубопроводе DN${dn} под давлением ${p} МПа зона оцепления назначается максимальной: <strong>${zoneMax}м</strong>. Контроль шлейфа рассеивания: <strong>${zoneMin}м</strong>.`;
+    } 
+    else if (task === 'repair_open') {
+      zoneMax = (p > 5.4 || dn >= 1000) ? 50 : 25;
+      zoneMin = 15;
+      ntd = `Ремонтные работы с разгерметизацией полостей оборудования (DN${dn}, давление ${p} МПа). Опасная зона выставления сигнальных постов: <strong>${zoneMax}м</strong>. Радиус непрерывного контроля ГВС: <strong>15м</strong>.`;
+    } 
+    else {
+      zoneMax = 15;
+      zoneMin = 5;
+      ntd = `Проведение работ без разгерметизации или внутри замкнутых пространств (ОЗП). Минимальная опасная зона составляет <strong>15м</strong>. Анализ воздуха перед входом обязателен в пределах 5м.`;
+    }
+  }
+
+  // Обновление цифр
+  document.getElementById('res-d').textContent = zoneMax;
+  document.getElementById('res-w').textContent = zoneMin;
+  document.getElementById('ntd-text').innerHTML = ntd;
+  document.getElementById('lbl-z1').textContent = z1Name;
+  document.getElementById('lbl-z2').textContent = z2Name;
+
+  // Динамическое масштабирование кругов схемы
+  let maxPx = 200;
+  let scale = maxPx / zoneMax;
+  
+  document.getElementById('c1').style.width = `${maxPx}px`;
+  document.getElementById('c1').style.height = `${maxPx}px`;
+  
+  // Минимальный размер внутреннего круга 75px, чтобы текст гарантированно помещался ниже эмодзи центра
+  let innerPx = Math.max(75, zoneMin * scale);
+  document.getElementById('c2').style.width = `${innerPx}px`;
+  document.getElementById('c2').style.height = `${innerPx}px`;
+}
+
+function triggerAnimate() {
+  const btn = document.querySelector('.calc-btn');
+  btn.textContent = '🔄 Расчет...';
+  setTimeout(() => {
+    calculate();
+    btn.textContent = '✅ Готово';
+    btn.style.background = 'var(--green)';
+    setTimeout(() => {
+      btn.textContent = '⚡ Обновить расчет';
+      btn.style.background = 'var(--orange)';
+    }, 1200);
+  }, 400);
+}
+
+calculate();
+</script>
+</body>
+</html>
