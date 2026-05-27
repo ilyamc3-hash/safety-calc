@@ -162,6 +162,42 @@ body {
 .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .hidden { display: none !important; }
 
+.spin-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background: rgba(0,0,0,0.2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.spin-wrap:focus-within { border-color: var(--orange); }
+.spin-btn {
+  background: rgba(255,107,53,0.12);
+  border: none;
+  color: var(--orange);
+  font-size: 16px;
+  font-weight: 700;
+  width: 36px;
+  height: 44px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+.spin-btn:hover { background: rgba(255,107,53,0.25); }
+.spin-btn:active { background: rgba(255,107,53,0.4); }
+.spin-input {
+  border: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  text-align: center;
+  flex: 1;
+  min-width: 0;
+}
+input[type=number].spin-input::-webkit-inner-spin-button,
+input[type=number].spin-input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+input[type=number].spin-input { -moz-appearance: textfield; }
+
 .calc-btn {
   width: 100%;
   background: var(--orange);
@@ -194,26 +230,17 @@ body {
   position: absolute;
   border-radius: 50%;
   border: 2px dashed;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Внешний круг: текст прижат к самому верху внутри круга */
-.zone-1 { 
-  border-color: rgba(231,76,60,0.4); 
-  background: rgba(231,76,60,0.02); 
-  justify-content: flex-start;
-  padding-top: 10px;
+.zone-1 {
+  border-color: rgba(231,76,60,0.4);
+  background: rgba(231,76,60,0.02);
 }
 
-/* Внутренний круг: текст прижат к самому низу внутри круга */
-.zone-2 { 
-  border-color: rgba(241,196,15,0.4); 
-  background: rgba(241,196,15,0.03); 
-  justify-content: flex-end;
-  padding-bottom: 10px;
+.zone-2 {
+  border-color: rgba(241,196,15,0.4);
+  background: rgba(241,196,15,0.03);
 }
 
 .zone-center {
@@ -224,18 +251,46 @@ body {
   position: absolute; /* Центр жестко зафиксирован в геометрической точке 0,0 */
 }
 
-/* Чистые стили надписей, которые теперь находятся внутри потока флексбокса */
-.zone-label { 
-  font-size: 8px; 
-  font-weight: 700; 
-  letter-spacing: 1px; 
-  text-transform: uppercase; 
-  text-align: center;
-  width: 90%;
-  pointer-events: none;
+.zone-legend {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
 }
-.zone-label-1 { color: rgba(231,76,60,0.85); }
-.zone-label-2 { color: rgba(241,196,15,0.85); } 
+.zone-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.zone-legend-dot {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  border: 2px dashed;
+  flex-shrink: 0;
+}
+.legend-dot-1 { border-color: rgba(231,76,60,0.8); }
+.legend-dot-2 { border-color: rgba(241,196,15,0.8); }
+.zone-label-1 { color: rgba(231,76,60,0.85); font-size: 9px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
+.zone-label-2 { color: rgba(241,196,15,0.85); font-size: 9px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
+
+.footer-disclaimer {
+  width: 100%;
+  max-width: 900px;
+  margin-top: 16px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  background: rgba(241,196,15,0.04);
+  border: 1px solid rgba(241,196,15,0.15);
+  border-left: 4px solid var(--yellow);
+  border-radius: 0 10px 10px 0;
+  padding: 14px;
+}
+.fd-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+.fd-title { font-size: 9px; font-weight: 700; color: var(--yellow); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 5px; }
+.fd-text { font-size: 10px; color: rgba(255,255,255,0.55); line-height: 1.6; }
 
 /* Результаты */
 .result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
@@ -268,6 +323,33 @@ body {
 .req-item { display: flex; align-items: flex-start; gap: 8px; font-size: 10px; color: rgba(255,255,255,0.7); line-height: 1.4; }
 .req-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--orange); margin-top: 5px; flex-shrink: 0; }
 .disclaimer { font-size: 8px; color: var(--muted); text-align: center; padding-top: 10px; border-top: 1px solid var(--border); margin-top: 4px; }
+
+.admit-card { border-radius: 12px; padding: 12px 14px; background: rgba(46,204,113,0.04); border: 1px solid rgba(46,204,113,0.12); }
+.admit-card-title { font-size: 8px; font-weight: 700; color: var(--green); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid rgba(46,204,113,0.1); }
+.admit-row { display: flex; flex-direction: column; gap: 7px; }
+.admit-item { display: flex; flex-direction: column; gap: 2px; }
+.admit-item-top { display: flex; align-items: baseline; gap: 8px; }
+.admit-gas-name { font-size: 9px; font-weight: 700; color: rgba(255,255,255,0.5); flex-shrink: 0; }
+.admit-val { font-family: 'Bebas Neue', sans-serif; font-size: 16px; color: var(--green); }
+.admit-sub { font-size: 8px; color: var(--muted); line-height: 1.4; }
+
+.purge-height-section { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
+.fire-lch-section { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
+.sog-section { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border); }
+.app-o-wrap { margin-top: 10px; }
+.app-o-interp { font-size: 10px; color: rgba(255,255,255,0.65); margin-bottom: 8px; line-height: 1.5; }
+.app-o-interp strong { color: var(--orange); }
+.app-o-table { width: 100%; border-collapse: collapse; font-size: 10px; }
+.app-o-table th { font-size: 8px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: var(--muted); padding: 5px 8px; text-align: center; border-bottom: 1px solid var(--border); }
+.app-o-table td { padding: 5px 8px; text-align: center; color: rgba(255,255,255,0.6); border-bottom: 1px solid rgba(255,255,255,0.04); transition: all 0.2s; }
+.app-o-table tr.app-o-active td { background: rgba(255,107,53,0.12); color: white; font-weight: 700; }
+.app-o-table tr.app-o-active td:first-child { border-left: 3px solid var(--orange); padding-left: 5px; }
+.input-row + .input-row { margin-top: 10px; }
+
+select.input-field option {
+  background: #121e30;
+  color: rgba(255,255,255,0.9);
+}
 </style>
 </head>
 <body>
@@ -308,12 +390,55 @@ body {
         <div class="input-group">
           <div class="input-label">Высота точки сварки/резки (H)</div>
           <select id="fire-height" class="input-field" onchange="calculate()">
-            <option value="0">На уровне земли (0 м)</option>
-            <option value="2">До 2 метров</option>
-            <option value="5">От 2 до 5 метров</option>
-            <option value="10">От 5 до 10 метров</option>
-            <option value="15">Свыше 10 метров</option>
+            <option value="0">0 м (уровень земли)</option>
+            <option value="2">2 м</option>
+            <option value="3">3 м</option>
+            <option value="4">4 м</option>
+            <option value="6">6 м</option>
+            <option value="8">8 м</option>
+            <option value="10">10 м</option>
+            <option value="15">Свыше 10 м</option>
           </select>
+        </div>
+        <div id="fire-lch-fields" class="hidden fire-lch-section">
+          <div class="input-row">
+            <div class="input-group">
+              <div class="input-label">Диаметр <span>мм</span></div>
+              <div class="spin-wrap">
+                <button class="spin-btn" type="button" onclick="stepFireDn(-100)">−</button>
+                <input type="number" id="fire-dn" class="input-field spin-input" value="1000" step="100" min="50" max="1500" oninput="calculate()">
+                <button class="spin-btn" type="button" onclick="stepFireDn(100)">+</button>
+              </div>
+            </div>
+            <div class="input-group">
+              <div class="input-label">Давление <span>МПа</span></div>
+              <div class="spin-wrap">
+                <button class="spin-btn" type="button" onclick="stepFirePressure(-0.1)">−</button>
+                <input type="number" id="fire-pressure" class="input-field spin-input" value="5.4" step="0.1" min="0" max="12" oninput="calculate()">
+                <button class="spin-btn" type="button" onclick="stepFirePressure(0.1)">+</button>
+              </div>
+            </div>
+          </div>
+          <div class="input-row">
+            <div class="input-group">
+              <div class="input-label">Нкр <span>мм вод.ст.</span></div>
+              <select id="fire-hkr" class="input-field" onchange="calculate()">
+                <option value="10">10</option>
+                <option value="20" selected>20</option>
+                <option value="30">30</option>
+                <option value="40">40</option>
+                <option value="50">50</option>
+              </select>
+            </div>
+            <div class="input-group">
+              <div class="input-label">Z <span>м</span></div>
+              <div class="spin-wrap">
+                <button class="spin-btn" type="button" onclick="stepFireZ(-5)">−</button>
+                <input type="number" id="fire-z" class="input-field spin-input" value="0" step="5" min="-70" max="87.5" oninput="calculate()">
+                <button class="spin-btn" type="button" onclick="stepFireZ(5)">+</button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -324,24 +449,38 @@ body {
             <option value="purge">Стравливание / продувка газа через свечи</option>
             <option value="repair_open">Ремонт с разгерметизацией оборудования</option>
             <option value="inspect_ozp">Работы без разгерметизации / в ОЗП (колодцы)</option>
+            <option value="sog">Хладагент СОГ (хладоновые установки)</option>
           </select>
         </div>
         
         <div class="input-row">
           <div class="input-group">
-            <div class="input-label">Диаметр трубы <span>DN</span></div>
-            <select id="gas-dn" class="input-field" onchange="calculate()">
-              <option value="50">DN 50 (57 мм)</option>
-              <option value="200">DN 200 (219 мм)</option>
-              <option value="500">DN 500 (530 мм)</option>
-              <option value="1000">DN 1000 (1020 мм)</option>
-              <option value="1400" selected>DN 1400 (1420 мм)</option>
-            </select>
+            <div class="input-label">Диаметр <span>мм</span></div>
+            <div class="spin-wrap">
+              <button class="spin-btn" type="button" onclick="stepDiameter(-100)">−</button>
+              <input type="number" id="gas-dn" class="input-field spin-input" value="1400" step="100" min="50" max="1500" oninput="calculate()">
+              <button class="spin-btn" type="button" onclick="stepDiameter(100)">+</button>
+            </div>
           </div>
           <div class="input-group">
             <div class="input-label">Давление газа <span>МПа</span></div>
-            <input type="number" id="gas-pressure" class="input-field" value="5.5" step="0.1" min="0" max="12" oninput="calculate()">
+            <div class="spin-wrap">
+              <button class="spin-btn" type="button" onclick="stepPressure(-0.1)">−</button>
+              <input type="number" id="gas-pressure" class="input-field spin-input" value="5.5" step="0.1" min="0" max="12" oninput="calculate()">
+              <button class="spin-btn" type="button" onclick="stepPressure(0.1)">+</button>
+            </div>
           </div>
+        </div>
+        <div id="sog-fields" class="hidden sog-section">
+          <div class="input-group">
+            <div class="input-label">Температура воздуха <span>°C</span></div>
+            <div class="spin-wrap">
+              <button class="spin-btn" type="button" onclick="stepSogTemp(-10)">−</button>
+              <input type="number" id="sog-temp" class="input-field spin-input" value="20" step="10" min="-40" max="40" oninput="calculate()">
+              <button class="spin-btn" type="button" onclick="stepSogTemp(10)">+</button>
+            </div>
+          </div>
+          <div id="sog-table"></div>
         </div>
       </div>
     </div>
@@ -353,26 +492,53 @@ body {
     <div class="card">
       <div class="card-title">Схема контроля границ</div>
       <div class="zone-visual">
-        <div id="c1" class="zone-circle zone-1" style="width: 200px; height: 200px;">
-          <div class="zone-label zone-label-1" id="lbl-z1">Опасная зона</div>
-        </div>
-        <div id="c2" class="zone-circle zone-2" style="width: 110px; height: 110px;">
-          <div class="zone-label zone-label-2" id="lbl-z2">Зона замера ГВС</div>
-        </div>
+        <div id="c1" class="zone-circle zone-1" style="width: 200px; height: 200px;"></div>
+        <div id="c2" class="zone-circle zone-2" style="width: 110px; height: 110px;"></div>
         <div id="center-ico" class="zone-center">🔥</div>
+      </div>
+      <div class="zone-legend">
+        <div class="zone-legend-item">
+          <div class="zone-legend-dot legend-dot-1"></div>
+          <span class="zone-label-1" id="lbl-z1">Опасная зона</span>
+        </div>
+        <div class="zone-legend-item">
+          <div class="zone-legend-dot legend-dot-2"></div>
+          <span class="zone-label-2" id="lbl-z2">Зона замера ГВС</span>
+        </div>
       </div>
     </div>
 
     <div class="result-grid">
       <div class="result-card danger">
-        <div class="zone-name">🚫 Зона Оцепления</div>
+        <div id="res-d-name" class="zone-name">🚫 Зона Оцепления</div>
         <div id="res-d" class="zone-value">50</div>
-        <div class="zone-unit">метров</div>
+        <div id="res-d-unit" class="zone-unit">метров</div>
       </div>
-      <div class="result-card warning">
-        <div class="zone-name">🧪 Контроль ГВС</div>
-        <div id="res-w" class="zone-value">20</div>
-        <div class="zone-unit">метров</div>
+      <div class="admit-card">
+        <div class="admit-card-title">✅ Условия допуска</div>
+        <div class="admit-row">
+          <div class="admit-item">
+            <div class="admit-item-top">
+              <span class="admit-gas-name">ВВ метан</span>
+              <span class="admit-val">≤ 0,88%</span>
+            </div>
+            <div class="admit-sub">20% от НКПР 4,4% · замер каждые 30 мин</div>
+          </div>
+          <div class="admit-item">
+            <div class="admit-item-top">
+              <span class="admit-gas-name">ВВ пропан</span>
+              <span class="admit-val">≤ 0,42%</span>
+            </div>
+            <div class="admit-sub">20% от НКПР 2,1% · замер каждые 15 мин</div>
+          </div>
+          <div class="admit-item">
+            <div class="admit-item-top">
+              <span class="admit-gas-name">Кислород О₂</span>
+              <span class="admit-val">≥ 20%</span>
+            </div>
+            <div class="admit-sub">по объёму</div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -393,7 +559,38 @@ body {
   </div>
 </div>
 
+<div class="footer-disclaimer">
+  <span class="fd-icon">⚠️</span>
+  <div>
+    <div class="fd-title">Дисклеймер</div>
+    <div class="fd-text">Калькулятор носит исключительно справочный характер и не является официальным нормативным документом. Результаты расчётов не заменяют наряд-допуск, решение ответственного руководителя работ и оценку реальных условий на объекте. При проведении работ повышенной опасности руководствуйтесь действующими регламентами, инструкциями и требованиями предприятия.</div>
+  </div>
+</div>
+
 <script>
+// Приложение К, СТО 00154223-1178-2024 — радиусы ОР на ЛЧМГ
+const ZONE_TABLE_OR = [
+  [1.2,  2.5,    0,    300,  75],
+  [1.2,  2.5,  300,  99999, 100],
+  [2.5, 10.0,    0,    300, 100],
+  [2.5, 10.0,  300,    600, 150],
+  [2.5, 10.0,  600,    800, 200],
+  [2.5, 10.0,  800,   1000, 250],
+  [2.5, 10.0, 1000,   1200, 300],
+  [2.5, 10.0, 1200,   1400, 350],
+  [10.0, 99,  1399,  99999, 385],
+];
+
+// Приложение Л, СТО 00154223-1178-2024 — радиус очистки по высоте
+const SPARK_RADIUS = { 0:5, 2:8, 3:9, 4:10, 6:11, 8:12, 10:13, 15:14 };
+
+// Приложение О, СТО 00154223-120-2025 — давление хладагента [°C, пропан, бутан]
+const APP_O = [
+  [-40, 0.10, 0],  [-30, 0.67, 0],  [-20, 1.44, 0],  [-10, 2.43, 0],
+  [  0, 3.74, 0.01], [10, 5.43, 0.41], [20, 7.47, 1.02],
+  [ 30, 9.99, 1.87], [40, 12.98, 2.97],
+];
+
 let currentType = 'fire';
 
 function setWorkType(type, element) {
@@ -410,6 +607,87 @@ function setWorkType(type, element) {
   calculate();
 }
 
+function getZoneRadiusOR(pressure, dn) {
+  for (const [pMin, pMax, dnMin, dnMax, r] of ZONE_TABLE_OR) {
+    if (pressure >= pMin && pressure < pMax && dn > dnMin && dn <= dnMax) return r;
+  }
+  return 75;
+}
+
+function getAppOPressure(temp) {
+  if (temp <= APP_O[0][0]) return { propane: APP_O[0][1], butane: 0 };
+  if (temp >= APP_O[APP_O.length-1][0]) { const l = APP_O[APP_O.length-1]; return { propane: l[1], butane: l[2] }; }
+  for (let i = 0; i < APP_O.length - 1; i++) {
+    const [t1, p1, b1] = APP_O[i], [t2, p2, b2] = APP_O[i+1];
+    if (temp >= t1 && temp <= t2) {
+      const f = (temp - t1) / (t2 - t1);
+      return { propane: +(p1 + f*(p2-p1)).toFixed(2), butane: +(b1 + f*(b2-b1)).toFixed(2) };
+    }
+  }
+  return { propane: 0, butane: 0 };
+}
+
+function stepFireDn(delta) {
+  const el = document.getElementById('fire-dn');
+  el.value = Math.min(1500, Math.max(50, (parseInt(el.value)||0) + delta));
+  calculate();
+}
+function stepFirePressure(delta) {
+  const el = document.getElementById('fire-pressure');
+  el.value = Math.min(12, Math.max(0, Math.round(((parseFloat(el.value)||0)*10 + delta*10))/10)).toFixed(1);
+  calculate();
+}
+function stepFireZ(delta) {
+  const el = document.getElementById('fire-z');
+  el.value = Math.min(87.5, Math.max(-70, Math.round(((parseFloat(el.value)||0)*10 + delta*10))/10)).toFixed(1);
+  calculate();
+}
+function stepSogTemp(delta) {
+  const el = document.getElementById('sog-temp');
+  el.value = Math.min(40, Math.max(-40, (parseInt(el.value)||0) + delta));
+  calculate();
+}
+
+function stepDiameter(delta) {
+  const el = document.getElementById('gas-dn');
+  const val = (parseInt(el.value) || 0) + delta;
+  el.value = Math.min(1500, Math.max(50, val));
+  calculate();
+}
+
+function stepPressure(delta) {
+  const el = document.getElementById('gas-pressure');
+  const val = Math.round((parseFloat(el.value) || 0) * 10 + delta * 10) / 10;
+  el.value = Math.min(12, Math.max(0, val)).toFixed(1);
+  calculate();
+}
+
+function getZoneRadius(pressure, dn) {
+  // Таблица радиусов опасных зон (расстояние в обе стороны от оси газопровода), м
+  // Источник: СТО 00154223-120-2025, Приложение С
+
+  // 10 МПа и выше
+  if (pressure >= 10) return 385;         // DN 1400
+
+  // От 2,5 до 10 МПа
+  if (pressure >= 2.5) {
+    if (dn <= 300)  return 100;           // 300 мм и менее
+    if (dn <= 600)  return 150;           // свыше 300 до 600 мм
+    if (dn <= 800)  return 200;           // свыше 600 до 800 мм
+    if (dn <= 1000) return 250;           // свыше 800 до 1000 мм
+    if (dn <= 1200) return 300;           // свыше 1000 до 1200 мм
+    return 350;                           // свыше 1200 до 1400 мм
+  }
+
+  // От 1,2 до 2,5 МПа
+  if (pressure >= 1.2) {
+    if (dn <= 300) return 75;             // 300 мм и менее
+    return 100;                           // свыше 300 мм
+  }
+
+  return 75; // давление ≤ 1,2 МПа — вне диапазона таблицы, принят минимум
+}
+
 function calculate() {
   let zoneMax = 50; 
   let zoneMin = 20;
@@ -418,66 +696,110 @@ function calculate() {
   let z2Name = "Зона ГВС";
 
   if (currentType === 'fire') {
-    const place = document.getElementById('fire-place').value;
-    const height = document.getElementById('fire-height').value;
-    
-    let sparkRadius = 5;
-    if (height === "2") sparkRadius = 8;
-    else if (height === "5") sparkRadius = 10;
-    else if (height === "10") sparkRadius = 12;
-    else if (height === "15") sparkRadius = 14;
+    const place  = document.getElementById('fire-place').value;
+    const height = parseInt(document.getElementById('fire-height').value) || 0;
+    const sparkRadius = SPARK_RADIUS[height] ?? 5;
 
     z2Name = "Очистка от материалов";
     zoneMin = sparkRadius;
+    z1Name  = "Границы опасной зоны";
 
     if (place === 'line') {
-      zoneMax = 50;
-      z1Name = "Посты оцепления ЛЧ";
-      ntd = `При работах на линейной части магистральных трубопроводов посты оцепления выставляются на расстоянии <strong>50м</strong>. Очистка площадки от горючих материалов в зависимости от высоты: <strong>${sparkRadius}м</strong>.`;
-    } else if (place === 'station_open') {
-      zoneMax = 25;
-      z1Name = "Опасная зона площадки";
-      ntd = `На открытых производственных площадках опасная зона составляет не менее <strong>25м</strong>. Заранее очищаемый радиус разлета горячих искр — <strong>${sparkRadius}м</strong>.`;
+      document.getElementById('fire-lch-fields').classList.remove('hidden');
+      const fireDn  = parseInt(document.getElementById('fire-dn').value) || 300;
+      const fireP   = parseFloat(document.getElementById('fire-pressure').value) || 0;
+      const hkr     = parseFloat(document.getElementById('fire-hkr').value) || 0;
+      const Z       = parseFloat(document.getElementById('fire-z').value) || 0;
+      const Nm      = hkr + Z * (10 / 17.5);
+      const nmNote  = Nm < 0
+        ? `⚠️ Место работы ниже крана — проверьте условия допуска.`
+        : `Допустимое давление в месте работ: <strong>${Nm.toFixed(1)} мм вод. ст.</strong>`;
+
+      zoneMax = getZoneRadiusOR(fireP, fireDn);
+      ntd = `Огневые работы на ЛЧМГ. DN ${fireDn} мм, давление ${fireP} МПа.<br>
+             Граница опасной зоны (Прил. К): <strong>${zoneMax} м</strong>.<br>
+             Очистка от горючих материалов (Прил. Л): <strong>${sparkRadius} м</strong>.<br>
+             Высотная поправка (Прил. М): Нкр = ${hkr} мм вод. ст., Z = ${Z >= 0 ? '+' : ''}${Z} м → ${nmNote}<br>
+             📄 СТО 00154223-1178-2024, Прил. К, Л, М.`;
     } else {
-      zoneMax = 15;
-      z1Name = "Зона контроля цеха";
-      ntd = `Внутри замкнутых производственных помещений зона контроля составляет <strong>15м</strong>. Очистка или экранирование горючих конструкций обязательны в радиусе <strong>${sparkRadius}м</strong>.`;
+      document.getElementById('fire-lch-fields').classList.add('hidden');
+      if (place === 'station_open') {
+        zoneMax = 25;
+        ntd = `На открытых производственных площадках опасная зона — не менее <strong>25 м</strong>. Очистка от горючих материалов (Прил. Л): <strong>${sparkRadius} м</strong>.<br>📄 СТО 00154223-1178-2024, Прил. Л.`;
+      } else {
+        zoneMax = 15;
+        ntd = `Внутри производственных помещений зона контроля — <strong>15 м</strong>. Очистка или экранирование горючих конструкций (Прил. Л): <strong>${sparkRadius} м</strong>.<br>📄 СТО 00154223-1178-2024, Прил. Л.`;
+      }
     }
   } 
   else if (currentType === 'gas') {
     const task = document.getElementById('gas-task').value;
-    const dn = parseInt(document.getElementById('gas-dn').value);
-    const p = parseFloat(document.getElementById('gas-pressure').value) || 0;
+    const pressure = parseFloat(document.getElementById('gas-pressure').value) || 0;
+    const dn = parseInt(document.getElementById('gas-dn').value) || 300;
 
     z1Name = "Зона оцепления";
     z2Name = "Анализ воздуха";
 
+    const sogFields = document.getElementById('sog-fields');
+
     if (task === 'purge') {
-      if (dn >= 1000 && p > 5.4) {
-        zoneMax = 300; 
-      } else if (dn >= 500 || p > 2.0) {
-        zoneMax = 200;
-      } else {
-        zoneMax = 150;
-      }
+      sogFields.classList.add('hidden');
+      zoneMax = getZoneRadius(pressure, dn);
       zoneMin = Math.round(zoneMax * 0.25);
-      ntd = `При интенсивном стравливании или продувке газа через свечи на трубопроводе DN${dn} под давлением ${p} МПа зона оцепления назначается максимальной: <strong>${zoneMax}м</strong>. Контроль шлейфа рассеивания: <strong>${zoneMin}м</strong>.`;
-    } 
+      z1Name = "Граница опасной зоны";
+      z2Name = "Зона контроля";
+      ntd = `Стравливание природного газа через свечные трубопроводы.<br>
+             DN ${dn} мм, давление ${pressure} МПа → граница опасной зоны: <strong>${zoneMax} м</strong> от оси газопровода.<br>
+             Автомобили и спецтехника — с наветренной стороны за пределами зоны.<br>
+             📄 СТО 00154223-120-2025, Приложение С; п. 7.2.1.`;
+    }
     else if (task === 'repair_open') {
-      zoneMax = (p > 5.4 || dn >= 1000) ? 50 : 25;
+      sogFields.classList.add('hidden');
+      zoneMax = (pressure > 5.4 || dn >= 1000) ? 50 : 25;
       zoneMin = 15;
-      ntd = `Ремонтные работы с разгерметизацией полостей оборудования (DN${dn}, давление ${p} МПа). Опасная зона выставления сигнальных постов: <strong>${zoneMax}м</strong>. Радиус непрерывного контроля ГВС: <strong>15м</strong>.`;
-    } 
+      ntd = `Ремонтные работы с разгерметизацией полостей оборудования (DN${dn}, давление ${pressure} МПа). Опасная зона: <strong>${zoneMax} м</strong>. Радиус непрерывного контроля ГВС: <strong>15 м</strong>.`;
+    }
+    else if (task === 'sog') {
+      sogFields.classList.remove('hidden');
+      const temp = parseFloat(document.getElementById('sog-temp').value) || 20;
+      const { propane, butane } = getAppOPressure(temp);
+      const butaneStr = butane >= 0.01 ? `${butane} кгс/см²` : '—';
+
+      // Ближайшая строка таблицы
+      const nearestIdx = APP_O.reduce((best, row, i) =>
+        Math.abs(row[0] - temp) < Math.abs(APP_O[best][0] - temp) ? i : best, 0);
+      const tableRows = APP_O.map(([t, p, b], i) => {
+        const tSign = t > 0 ? '+' : '';
+        const bCell = b >= 0.01 ? b : '—';
+        const cls   = i === nearestIdx ? ' class="app-o-active"' : '';
+        return `<tr${cls}><td>${tSign}${t}</td><td>${p}</td><td>${bCell}</td></tr>`;
+      }).join('');
+      document.getElementById('sog-table').innerHTML =
+        `<div class="app-o-wrap">
+           <div class="app-o-interp">При <strong>${temp}°C</strong>: пропан <strong>${propane} кгс/см²</strong>, бутан <strong>${butaneStr}</strong></div>
+           <table class="app-o-table">
+             <thead><tr><th>°C</th><th>Пропан кгс/см²</th><th>Бутан кгс/см²</th></tr></thead>
+             <tbody>${tableRows}</tbody>
+           </table>
+         </div>`;
+
+      zoneMax = 100; zoneMin = 25;
+      z1Name = "Зона оцепления"; z2Name = "Зона контроля";
+      ntd = `Хладагент СОГ (хладоновые установки). Температура воздуха: <strong>${temp}°C</strong>.<br>
+             Давление хладагента (Прил. О): пропан <strong>${propane} кгс/см²</strong>, бутан <strong>${butaneStr}</strong>.<br>
+             Опасная зона от мест разгерметизации: <strong>не менее 100 м</strong>.<br>
+             📄 СТО 00154223-120-2025, п. 6.4.5; Приложение О.`;
+    }
     else {
+      sogFields.classList.add('hidden');
       zoneMax = 15;
       zoneMin = 5;
-      ntd = `Проведение работ без разгерметизации или внутри замкнутых пространств (ОЗП). Минимальная опасная зона составляет <strong>15м</strong>. Анализ воздуха перед входом обязателен в пределах 5м.`;
+      ntd = `Проведение работ без разгерметизации или внутри замкнутых пространств (ОЗП). Минимальная опасная зона: <strong>15 м</strong>. Анализ воздуха перед входом обязателен в пределах 5 м.`;
     }
   }
 
   // Обновление цифр
   document.getElementById('res-d').textContent = zoneMax;
-  document.getElementById('res-w').textContent = zoneMin;
   document.getElementById('ntd-text').innerHTML = ntd;
   document.getElementById('lbl-z1').textContent = z1Name;
   document.getElementById('lbl-z2').textContent = z2Name;
