@@ -512,32 +512,38 @@ select.input-field option {
       <div class="result-card danger">
         <div id="res-d-name" class="zone-name">🚫 Зона Оцепления</div>
         <div id="res-d" class="zone-value">50</div>
-        <div id="res-d-unit" class="zone-unit">метров</div>
+        <div class="zone-unit">метров</div>
       </div>
-      <div class="admit-card">
-        <div class="admit-card-title">✅ Условия допуска</div>
-        <div class="admit-row">
-          <div class="admit-item">
-            <div class="admit-item-top">
-              <span class="admit-gas-name">ВВ метан</span>
-              <span class="admit-val">≤ 0,88%</span>
-            </div>
-            <div class="admit-sub">20% от НКПР 4,4% · замер каждые 30 мин</div>
+      <div class="result-card warning">
+        <div id="res-z-name" class="zone-name">Зона ГВС</div>
+        <div id="res-z" class="zone-value">20</div>
+        <div class="zone-unit">метров</div>
+      </div>
+    </div>
+
+    <div class="admit-card">
+      <div class="admit-card-title">✅ Условия допуска</div>
+      <div class="admit-row">
+        <div class="admit-item">
+          <div class="admit-item-top">
+            <span class="admit-gas-name">ВВ метан</span>
+            <span class="admit-val">≤ 0,88%</span>
           </div>
-          <div class="admit-item">
-            <div class="admit-item-top">
-              <span class="admit-gas-name">ВВ пропан</span>
-              <span class="admit-val">≤ 0,42%</span>
-            </div>
-            <div class="admit-sub">20% от НКПР 2,1% · замер каждые 15 мин</div>
+          <div class="admit-sub">20% от НКПР 4,4% · замер каждые 30 мин</div>
+        </div>
+        <div class="admit-item">
+          <div class="admit-item-top">
+            <span class="admit-gas-name">ВВ пропан</span>
+            <span class="admit-val">≤ 0,42%</span>
           </div>
-          <div class="admit-item">
-            <div class="admit-item-top">
-              <span class="admit-gas-name">Кислород О₂</span>
-              <span class="admit-val">≥ 20%</span>
-            </div>
-            <div class="admit-sub">по объёму</div>
+          <div class="admit-sub">20% от НКПР 2,1% · замер каждые 15 мин</div>
+        </div>
+        <div class="admit-item">
+          <div class="admit-item-top">
+            <span class="admit-gas-name">Кислород О₂</span>
+            <span class="admit-val">≥ 20%</span>
           </div>
+          <div class="admit-sub">по объёму</div>
         </div>
       </div>
     </div>
@@ -800,6 +806,9 @@ function calculate() {
 
   // Обновление цифр
   document.getElementById('res-d').textContent = zoneMax;
+  document.getElementById('res-d-name').textContent = z1Name;
+  document.getElementById('res-z').textContent = zoneMin;
+  document.getElementById('res-z-name').textContent = z2Name;
   document.getElementById('ntd-text').innerHTML = ntd;
   document.getElementById('lbl-z1').textContent = z1Name;
   document.getElementById('lbl-z2').textContent = z2Name;
